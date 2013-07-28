@@ -14,6 +14,6 @@ Vagrant.configure("2") do |config|
   config.vbguest.auto_update = false
 
   ## For masterless, mount your salt file root
-  config.vm.synced_folder local_zanbai_repo_file, "/vat/tmp"
+  config.vm.synced_folder local_zanbai_repo_file, "/var/www/htdocs/zanbai.com"
 
 end
