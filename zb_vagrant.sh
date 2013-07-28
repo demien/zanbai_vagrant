@@ -36,6 +36,16 @@ print_usage() {
     echo "======================================================================="
 }
 
+FULL_ARGS=$@
+
+for args in $FULL_ARGS; do
+    if [ $args == 'up' ]; then
+        UP_OPTION=1
+    elif [ $args == 'update' ]; then
+        UPDATE_OPTION=1
+    fi
+done
+
 NEEDED_PROGRAMS="git vagrant VirtualBox"
 check_program "$NEEDED_PROGRAMS"
 BOX_NAME="zanbai"
@@ -45,35 +55,44 @@ ZANBAI_VAGRANT_PATH=$ZANBAI_DEV_PATH/vagrant
 
 print_usage
 
-if [ ! -d "$ZANBAI_DEV_PATH" ]; then
+if [ ! -z $UP_OPTION ]; then
+    if [ ! -d "$ZANBAI_DEV_PATH" ]; then
+        # create dir
+        rm -f -r $ZANBAI_VAGRANT_PATH
+        rm -f -r $ZANBAI_DEV_PATH
+        mkdir $ZANBAI_DEV_PATH
+        mkdir $ZANBAI_VAGRANT_PATH
 
-    # get box path
-    echo -n "Please input box file location: "
-    read BOX_FILE_PATH
+        # get git file
+        git clone $CONFIG_GIT_REPO $ZANBAI_VAGRANT_PATH
+        exit_if_failed "clone config repo from git"
 
-    # add box
-    vagrant box add $BOX_NAME $BOX_FILE_PATH
-    exit_if_failed "add vagrant box"
+        # get box path
+        echo -n "Please input box file location: "
+        read BOX_FILE_PATH
 
-    # create dir
-    mkdir $ZANBAI_DEV_PATH
-    mkdir $ZANBAI_VAGRANT_PATH
+        # add box
+        vagrant box add $BOX_NAME $BOX_FILE_PATH
+        exit_if_failed "add vagrant box"
 
-    # get git file
-    git clone $CONFIG_GIT_REPO $ZANBAI_DEV_PATH
-    exit_if_failed "clone config repo from git"
+        # make a link
+        echo "This scripts is trying to create an link under /usr/local/bin. Type your password to allow this."
+        sudo ln -s $ZANBAI_VAGRANT_PATH/zb_vagrant.sh /usr/local/bin/zb_vagrant
 
-    # make a link
-    echo "This scripts is trying to create an link under /usr/local/bin. Type your password to allow this."
-    sudo ln -s $ZANBAI_VAGRANT_PATH/zb_vagrant.sh /usr/local/bin/zb_vagrant
+        # create vagrant file
+        generate_vagrant_file
 
-    # create vagrant file
-    generate_vagrant_file
-
-    # vagrant up
-    cd $ZANBAI_VAGRANT_PATH
-    vagrant up
+        # vagrant up
+        cd $ZANBAI_VAGRANT_PATH
+        vagrant up
+    else
+        cd $ZANBAI_VAGRANT_PATH
+        vagrant up --no-provision
+    fi
+elif [ ! -z $UPDATE_OPTION ]; then
+    echo 'update to be done'
 else
     cd $ZANBAI_VAGRANT_PATH
-    vagrant up --no-provision
+    echo "vagrant $FULL_ARGS"
+    vagrant $FULL_ARGS
 fi

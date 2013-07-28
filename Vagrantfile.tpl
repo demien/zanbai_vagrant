@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|
   ## Chose your base box
-  config.vm.box = "aa_dev"
+  config.vm.box = "zanbai"
 
   config.vm.network :private_network, ip: "10.11.12.13"
 
