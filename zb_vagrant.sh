@@ -33,7 +33,7 @@ print_usage() {
     echo "========= Welcome ====================================================="
     echo "this scripts is actually an wrapper for vagrant, "
     echo "which means you can use all commands from vagrant."
-    echo "user age: zb_vagrant up / halt"
+    echo "userage: 1. sh zb up  2. sh zb halt"
     echo "======================================================================="
 }
 
