@@ -16,6 +16,7 @@ check_program() {
 exit_if_failed() {
     if [ $? -gt 0 ]; then
         echo "$1 failed, exit now."
+        rm -f -r $ZANBAI_DEV_PATH
     fi
 }
 
@@ -77,7 +78,7 @@ if [ ! -z $UP_OPTION ]; then
 
         # make a link
         echo "This scripts is trying to create an link under /usr/local/bin. Type your password to allow this."
-        sudo ln -s $ZANBAI_VAGRANT_PATH/zb_vagrant.sh /usr/local/bin/zb_vagrant
+        sudo ln -s $ZANBAI_VAGRANT_PATH/zb_vagrant.sh /usr/local/bin/zb
 
         # create vagrant file
         generate_vagrant_file
