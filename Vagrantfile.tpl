@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   end
 
   ## do NOT auto update VirtualBox additions
-  config.vbguest.auto_update = false
+  #config.vbguest.auto_update = false
 
   ## For masterless, mount your salt file root
   config.vm.synced_folder local_zanbai_repo_file, "/var/www/htdocs/zanbai.com"
